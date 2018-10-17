@@ -6,7 +6,7 @@ from torch.nn import CrossEntropyLoss
 import torch
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
-import lung_sementation.importAndProcess as iap
+import lung_segmentation.importAndProcess as iap
 from models.unet_models import unet11, unet16
 
 
@@ -34,6 +34,8 @@ def main():
         labeltransform=Compose([Resize((224, 224)),ToTensor()]),
         convert_to='RGB',
     )
+    if len(dataset) == 0:
+        raise Exception('No images found at path: {}'.format(args.montgomery_path))
 
     dataloader = torch.utils.data.DataLoader(dataset,batch_size=args.batch_size, shuffle=True)
     if args.model == 'unet11':
@@ -65,7 +67,7 @@ def main():
             log.write(str(loss.cpu().detach().numpy().item()) + "\n")
 
         if((eps+1) % 50 == 0):
-            torch.save(segNet.state_dict(), "{}_{}.pt".format(args.model, eps+1))
+            torch.save(segNet.state_dict(), "{}_{}.pth".format(args.model, eps+1))
 
 if __name__ == '__main__':
     main()

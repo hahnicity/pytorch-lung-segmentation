@@ -6,7 +6,8 @@ import torch
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
 import lung_segmentation.importAndProcess as iap
-from models.unet_models import model, unet11, unet16
+from models import model
+from models.unet_models import unet11, unet16
 
 parser = argparse.ArgumentParser()
 parser.add_argument('img_path')

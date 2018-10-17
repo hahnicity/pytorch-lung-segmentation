@@ -12,7 +12,7 @@ from torch.optim import Adam
 from torch.nn import MSELoss
 from torchvision.transforms import Compose, Normalize, Resize, ToTensor
 
-from lung_sementation.importAndProcess import JSRTBSE
+from lung_segmentation.importAndProcess import JSRTBSE
 from models.unet_models import unet11, unet16
 
 

@@ -2,9 +2,10 @@
 Lung segmentation for Pytorch Using U-Net and ResNet.
 
 ## Install
-Use Python 3 for this library. [Install pytorch](https://pytorch.org/#pip-install-pytorch) the way that feels most comfortable for you. Using Anaconda seems to be the best way these days though. After this, install package requirements
+Use Python 3 for this library. [Install pytorch](https://pytorch.org/#pip-install-pytorch)  and other env requirements using Anaconda. After this, install pip packages.
 
-    pip install -r requirements.txt -e .
+    conda install --file conda_requirements.txt
+    pip install -r pip_requirements.txt -e .
 
 ## Datasets required
 For Lung Segmentation you can use the [Montgomery Dataset](https://ceb.nlm.nih.gov/repositories/tuberculosis-chest-x-ray-image-data-sets/), for bone shadow removal
@@ -17,17 +18,17 @@ to a place on your disk and unzip them.
 For U-Net16 (the best performer) training:
 
     cd lung_segmentation
-    python unet_train -p /path/to/montgomery/ -m unet16 -b 32 -e 300
+    python unet_train.py -p /path/to/montgomery/ -m unet16 -b 32 -e 100
 
 For U-Net16 testing on Montgomery
 
     cd lung_segmentation
-    python test.py /path/to/montgomery/images -m unet16 -t png -r unet16_300.pth
+    python test.py /path/to/montgomery -m unet16 -t png -r unet16_100.pth
 
 For U-Net16 testing on CXR14
 
     cd lung_segmentation
-    python test.py /path/to/cxr14/images -m unet16 -t png -r unet16_300.pth --non-montgomery
+    python test.py /path/to/cxr14/images -m unet16 -t png -r unet16_100.pth --non-montgomery
 
 ### Bone Shadow Removal
 
@@ -39,8 +40,14 @@ this determination is because the datasets used are so small.
 
 ### Typical Segmentation Success Case
 
+![](segmentation_success.png)
+
 ### Opacity Failure Case
 
-### Implanted Device Failure Case
+![](segmentation_opacification_failure.png)
+
+### Device on Screen Failure Case
+
+![](segmentation_device_failure.png)
 
 ### Bone Shadow Removal

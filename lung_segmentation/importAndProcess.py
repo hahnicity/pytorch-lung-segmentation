@@ -115,7 +115,7 @@ class lungSegmentDataset(Dataset):
         left = left[0].type(torch.uint8)
         label=left+right
 
-        sample = {'image':img,'label':label}
+        sample = {'image':img,'label':label, 'filename': self.list[idx]}
 
         return sample
 

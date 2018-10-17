@@ -5,14 +5,14 @@ import numpy as np
 import torch
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 
-import lung_sementation.importAndProcess as iap
-from models.unet_models import model, unet11, unet16
+import lung_segmentation.importAndProcess as iap
+from models import model
+from models.unet_models import unet11, unet16
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('img_path')
 parser.add_argument('-m', '--model', choices=['unet11', 'unet16', 'resnet'], default='unet16')
-parser.add_argument('-o', '--save-to-new-dir', default='image/')
 parser.add_argument('-r', '--resume-from', help='resume from a specific savepoint', required=True)
 parser.add_argument('-t', '--input-type', choices=['dicom', 'png'], default='dicom')
 parser.add_argument('--non-montgomery', action='store_true', help='toggle this flag if you are working on a non-montgomery dataset')
@@ -42,8 +42,17 @@ convert_to = 'RGB'
 
 if args.input_type == 'dicom':
     dataset = iap.DicomSegment(args.img_path, transforms, convert_to)
-elif args.input_type == 'png':
+elif args.input_type == 'png' and args.non_montgomery:
     dataset = iap.LungTest(args.img_path, transforms, convert_to)
+elif args.input_type == 'png':
+    dataset = iap.lungSegmentDataset(
+        os.path.join(args.img_path, "CXR_png"),
+        os.path.join(args.img_path, "ManualMask/leftMask/"),
+        os.path.join(args.img_path, "ManualMask/rightMask/"),
+        imagetransform=transforms,
+        labeltransform=Compose([Resize((224, 224)),ToTensor()]),
+        convert_to='RGB',
+    )
 dataloader = torch.utils.data.DataLoader(dataset,batch_size=1,shuffle=False)
 
 model = torch.nn.DataParallel(model)
@@ -57,7 +66,4 @@ with torch.no_grad():
         if not args.non_montgomery:
             show.ImageWithGround(i,True,True,save=True)
 
-        if args.save_to_new_dir != 'images/':
-            show.save_for_preprocessing(i, sample['filename'][0], mask.squeeze().cpu().numpy(), args.save_to_new_dir)
-        else:
-            show.ImageWithMask(i, sample['filename'][0], mask.squeeze().cpu().numpy(), True, True, save=True)
+        show.ImageWithMask(i, sample['filename'][0], mask.squeeze().cpu().numpy(), True, True, save=True)
