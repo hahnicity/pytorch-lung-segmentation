@@ -30,13 +30,25 @@ For U-Net16 testing on CXR14
     cd lung_segmentation
     python test.py /path/to/cxr14/images -m unet16 -t png -r unet16_100.pth --non-montgomery
 
-### Bone Shadow Removal
+### Bone Shadow Elimination
+
+For Bone Shadow Elimination (BSE) training:
+
+    cd lung_segmentation
+    python bse_train.py --jsrt-path /path/to/jsrt/images --bse-path /path/to/jsrt/bone_shadow_eliminated -e 100 -m unet16
+
+For BSE testing on CXR14
+
+    cd lung_segmentation
+    python bse_test.py -m unet16 -r unet16_bse_100.pth /path/to/cxr14/images
 
 ## Results
 Utilizing a pretrained U-Net performs best at segmentation, although it is limited
 to cases where there is no major opacification of the lungs or where there is no
 implanted medical device. It is likely that the reason the classifier can't make
 this determination is because the datasets used are so small.
+
+BSE doesn
 
 ### Typical Segmentation Success Case
 
@@ -50,4 +62,14 @@ this determination is because the datasets used are so small.
 
 ![](segmentation_device_failure.png)
 
-### Bone Shadow Removal
+### Bone Shadow Eliminated
+#### Before
+
+![](cxr14_bse_original.png)
+
+#### After
+
+![](cxr14_bse_changed.png)
+
+## Acknowledgements
+Credit is equally shared with [Sam Truong](https://github.com/Samtruong) on coding this up.
