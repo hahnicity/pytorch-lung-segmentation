@@ -48,7 +48,10 @@ to cases where there is no major opacification of the lungs or where there is no
 implanted medical device. It is likely that the reason the classifier can't make
 this determination is because the datasets used are so small.
 
-BSE doesn
+BSE doesn't actually seem to work on non-JSRT datasets. We ran experiment on CXR14 and
+it failed in every single case to remove bone shadow. It is likely that this is due
+to the manner in which the JSRT images were resolved. Future work can include finding ways
+to normalize JSRT so that it is congruent with CXR14 and other CXR datasets.
 
 ### Typical Segmentation Success Case
 
